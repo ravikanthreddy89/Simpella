@@ -1,0 +1,1 @@
+cat password > scp ./*.java rgudipat@timberlake.cse.buffalo.edu:/home/csgrad/rgudipat/Simpella/src 
