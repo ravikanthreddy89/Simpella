@@ -1,7 +1,3 @@
-                                                                     
-                                                                     
-                                                                     
-                                             
 import java.io.File;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
@@ -36,7 +32,7 @@ class Message {
 	
 	// arraylist to store query hit result set
 	ArrayList<result_set> hits= new  ArrayList<result_set> ();
-  // constructor for ping and pong messages
+        // constructor for ping and pong messages
 	Message(Database d){
 		db= d;
 	}
@@ -57,37 +53,37 @@ class Message {
 	
 	void PingCreator() {
 		// message id generation
-				UUID guid = UUID.randomUUID();
-				long  most_sig_bits=guid.getMostSignificantBits();
-				long least_sig_bits=guid.getLeastSignificantBits();
-				byte[] msb= ByteBuffer.allocate(8).putLong(most_sig_bits).array();
-				byte[] lsb= ByteBuffer.allocate(8).putLong(least_sig_bits).array();
-			 	System.arraycopy(msb, 0, message_id , 0, 8);
-			 	System.arraycopy(lsb, 0, message_id, 8, 8);
-			 	message_id[8]=(byte) 0xFF;
-			 	message_id[15]=(byte) 0x00;
-			 	System.arraycopy(message_id, 0, header, 0, 16);
-			 	// end of message id generation block
+		UUID guid = UUID.randomUUID();
+		long  most_sig_bits=guid.getMostSignificantBits();
+		long least_sig_bits=guid.getLeastSignificantBits();
+		byte[] msb= ByteBuffer.allocate(8).putLong(most_sig_bits).array();
+		byte[] lsb= ByteBuffer.allocate(8).putLong(least_sig_bits).array();
+	 	System.arraycopy(msb, 0, message_id , 0, 8);
+	 	System.arraycopy(lsb, 0, message_id, 8, 8);
+	 	message_id[8]=(byte) 0xFF;
+	 	message_id[15]=(byte) 0x00;
+	 	System.arraycopy(message_id, 0, header, 0, 16);
+	 	// end of message id generation block
 	
-			 	MY_UUID m=new MY_UUID();
-				System.arraycopy(message_id, 0, m.GUID, 0 , 16);
-				db.MyUUID_db.add(m);
+	 	MY_UUID m=new MY_UUID();
+		System.arraycopy(message_id, 0, m.GUID, 0 , 16);
+		db.MyUUID_db.add(m);
 			
-			 	// message type
-				message_type=0;   
-				header[16]= message_type;
+	 	// message type
+		message_type=0;   
+		header[16]= message_type;
+		
+		// ttl
+		header[17]=ttl;
+		
+		//hops
+		header[18]=hops;
 				
-				// ttl
-				header[17]=ttl;
-				
-				//hops
-				header[18]=hops;
-				
-				// payload length=0 for ping message  
-			 	payload_length= ByteBuffer.allocate(4).putInt(0).array();
-			 	System.arraycopy(payload_length, 0, header, 19, 4);
+		// payload length=0 for ping message  
+	 	payload_length= ByteBuffer.allocate(4).putInt(0).array();
+	 	System.arraycopy(payload_length, 0, header, 19, 4);
 			 	
-			 	System.arraycopy(header, 0 , ping,0,23);
+	 	System.arraycopy(header, 0 , ping,0,23);
 	}// ping creator block
 	
 	
@@ -122,43 +118,35 @@ class Message {
 		// copying ip address of localhost into Ip address field of payload
 		System.arraycopy((Database.local_host).getAddress(), 0, payload, 2, 4);
 		
-		
-		
-		
-	   if(Database.file_directory!=null){
+
+        	if(Database.file_directory!=null){
 		   File f= new File(Database.file_directory);
-			
-			
-			
-			// copying number of files shared by local host into no of files field of payload
-			
-			byte [] temp = new byte[4];
-		    temp =  ByteBuffer.allocate(4).putInt(f.list().length).array();
+		   // copying number of files shared by local host into no of files field of payload
+		   byte [] temp = new byte[4];
+		   temp =  ByteBuffer.allocate(4).putInt(f.list().length).array();
 		    
-		    System.arraycopy(temp, 0, payload, 6, 4);
+		   System.arraycopy(temp, 0, payload, 6, 4);
 		    
-		    long file_size=0;
-		    for(int i=0; i<f.list().length ; i++ ) file_size=((f.listFiles())[i].length())+file_size;
-		    int file_size_in_kb = (int)(file_size/1024);
+		   long file_size=0;
+		   for(int i=0; i<f.list().length ; i++ ) file_size=((f.listFiles())[i].length())+file_size;
+		   int file_size_in_kb = (int)(file_size/1024);
 		    
-		    temp=ByteBuffer.allocate(4).putInt(file_size_in_kb).array();
+		   temp=ByteBuffer.allocate(4).putInt(file_size_in_kb).array();
 		    
-		    System.arraycopy(temp, 0, payload, 10, 4);
-		    
-		    
-		    
-	   }// end of for loop
-	   else {
-		    byte [] zero = new byte[8];
-		    		for(int i=0; i<8 ; i++){
-		    			zero[i]=0;
-		    		}
-		     System.arraycopy(zero, 0, payload, 6, 8);
-		     
-	   }// end of else loop
+		   System.arraycopy(temp, 0, payload, 10, 4);
+	        }// end of for loop
 	   
-	   System.arraycopy(header, 0, pong, 0, 23);
-	   System.arraycopy(payload, 0, pong, 23, 14);
+	       else {
+	           byte [] zero = new byte[8];
+	           for(int i=0; i<8 ; i++){
+		   	zero[i]=0;
+		   }
+		   System.arraycopy(zero, 0, payload, 6, 8);
+		     
+	       }// end of else loop
+	   
+	       System.arraycopy(header, 0, pong, 0, 23);
+	       System.arraycopy(payload, 0, pong, 23, 14);
 	 
 		    
 	}// pong creator block
@@ -212,23 +200,23 @@ class Message {
 	//==================================================================================
 	void QueryHitCreator(byte[] q) {
 		
-				//message id
-				System.arraycopy(q,0 , header, 0 ,16);
+		//message id
+		System.arraycopy(q,0 , header, 0 ,16);
 				
-				//message type
-				message_type=(byte) 0x81;
-				header[16]= message_type;
+		//message type
+		message_type=(byte) 0x81;
+		header[16]= message_type;
 			    
-				// ttl
-				header[17]=ttl;
+		// ttl
+		header[17]=ttl;
 				
 				
-				//hops
-				header[18]=hops;		
+		//hops
+		header[18]=hops;		
 		
-		       //calculating query string length
-				byte [] t= new byte[4];
-				System.arraycopy(q,19, t, 0, 4);
+		//calculating query string length
+		byte [] t= new byte[4];
+		System.arraycopy(q,19, t, 0, 4);
 				
 		  
 		
@@ -241,12 +229,9 @@ class Message {
 		int x=0;
 		while(st.hasMoreElements()){
 			String temp=st.nextToken();
-			
-			
 			//=================================
 			for(int i=0; i<db.SharedLibrary_db.size(); i++ ) {
-				 
-				
+		
 			//	StringTokenizer l= new StringTokenizer(db.SharedLibrary_db.get(i).file_name.substring(0,db.SharedLibrary_db.get(i).file_name.indexOf(".") ));
 				
 			//	while(l.hasMoreElements()){
@@ -262,18 +247,10 @@ class Message {
 					 x+=(8+hits.get(k).name.getBytes().length);
 					
 				}// end of while loop
-				
-				
-						
 					 
 			}// end of for loop
 			
 		}// end of while loop
-		
-		
-		
-		
-		
 		
 		//payload length
 		
@@ -291,9 +268,6 @@ class Message {
 		
 		// copying number of hits into number of hits field of queryhit
 		query_hit[23]=(byte)hits.size();
-		
-		
-		
 		
 		// copying port number into query hit msg
 		byte[] port_no= new byte[2];
@@ -336,18 +310,15 @@ class Message {
 		}// end for loop for dumping result set into query hit
 		
 			// dumping servent id
-			long most_sig_bits= Database.servent_id.getMostSignificantBits();
-			long least_sig_bits= Database.servent_id.getLeastSignificantBits();
-			byte[] msb= ByteBuffer.allocate(8).putLong(most_sig_bits).array();
-			byte[] lsb= ByteBuffer.allocate(8).putLong(least_sig_bits).array();
+		long most_sig_bits= Database.servent_id.getMostSignificantBits();
+		long least_sig_bits= Database.servent_id.getLeastSignificantBits();
+		byte[] msb= ByteBuffer.allocate(8).putLong(most_sig_bits).array();
+		byte[] lsb= ByteBuffer.allocate(8).putLong(least_sig_bits).array();
 			
-			
-			System.arraycopy(msb, 0,query_hit , res, 8);
-			System.arraycopy(lsb, 0, query_hit,res+8 , 8);
-				 
 		
-		
-		
+		System.arraycopy(msb, 0,query_hit , res, 8);
+		System.arraycopy(lsb, 0, query_hit,res+8 , 8);
+
 	}// query hit creator block
 
 }// message class block
