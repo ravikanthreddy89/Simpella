@@ -64,10 +64,6 @@ public class IP{
            e.printStackTrace(System.err);
        }
 
-       /*if (local != null) 
-           System.err.println("Local IP is: " + local);
-       if (global != null) 
-           System.err.println("Global IP is: " + global);*/
        return global;
    }
 }  
