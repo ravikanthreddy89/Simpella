@@ -43,7 +43,7 @@ public  void run()
 	    		
 	    		SimpellaConnections sc=new SimpellaConnections();
 				sc.s=s;
-				sc.port=s.getPort();///////////////////////////////////////////////////////////////////////////
+				sc.port=s.getPort();
 				
 				sc.ip=s.getInetAddress();
 	    		synchronized (d.SimpellaConnections_db) {
