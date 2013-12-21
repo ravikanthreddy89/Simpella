@@ -51,10 +51,6 @@ public class TCPDownloadHandler extends Thread {
 				;
 			else
 				throw new InvalidHttpException();
-			
-			//debug statement
-			System.out.println("breakpoint 1");
-			
 			StringTokenizer str = new StringTokenizer(s, "\r\n");
 			if (str.hasMoreElements()) 
 			{
@@ -70,8 +66,6 @@ public class TCPDownloadHandler extends Thread {
 							str2 = new StringTokenizer(str1.nextToken(), "/");
 						else
 							throw new InvalidHttpException();
-						//debug statement
-						    //System.out.println("breakpoint 2");
 									int j=0;			
 						s = str2.nextToken();
 						if (s.equals("get")) {
@@ -111,10 +105,6 @@ public class TCPDownloadHandler extends Thread {
 							throw new InvalidHttpException();
 					} else
 						throw new InvalidHttpException();
-					//debug statement
-				//System.out.println("breakpoint 3");
-				// //Line 2
-				
 				 if(str.hasMoreElements())
 				 {
 				 s=str.nextToken();
@@ -127,9 +117,6 @@ public class TCPDownloadHandler extends Thread {
 				
 				 else
 				 throw new InvalidHttpException();
-				//debug statement
-				 //System.out.println("breakpoint 4");
-				// Line 3
 				boolean valid = false;
 				while (str.hasMoreElements()) {
 					s = str.nextToken();
@@ -137,8 +124,6 @@ public class TCPDownloadHandler extends Thread {
 					if (str1.hasMoreElements()
 							&& str1.nextElement().toString()
 									.equalsIgnoreCase("Host")) {
-						//debug statement
-						//System.out.println("breakpoint 5");
 						valid = true;
 						if (str1.hasMoreElements()) {
 
@@ -266,10 +251,5 @@ public class TCPDownloadHandler extends Thread {
 }
 
 class InvalidHttpException extends Exception {
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
-
 }
