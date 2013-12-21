@@ -21,84 +21,76 @@ Database d;
 	this.d=d;
 	this.start();
 	}
-	public void run()
-{
+	public void run(){
 	BufferedReader inFromUser=new BufferedReader(new InputStreamReader(System.in));
 	String cmd;
-		while(true)
-	{
+		while(true){
 		System.out.print("\nSimpella>");
-			try {
+		try {
 			cmd=inFromUser.readLine();
-		cmd=cmd.trim();
-		StringTokenizer st=new StringTokenizer(cmd);
-		String s;
-		if(st.hasMoreElements())
-		{
-			s=st.nextToken();
+			cmd=cmd.trim();
+			StringTokenizer st=new StringTokenizer(cmd);
+			String s;
+			if(st.hasMoreElements())
+			{
+				s=st.nextToken();
 			
 			// info command block
 			//=======================================================================================================
-		if(s.equals("info"))
-		{
-			if(st.hasMoreElements())
-			{
-			s=st.nextToken();
-			if(s.equals("c"))
-			{
-				System.out.println("CONNECTION STATS:\n---------------");
-		synchronized (d.SimpellaConnections_db) {
-			for (int i=0;i<d.SimpellaConnections_db.size();i++)
-			{
-				System.out.println(i+1+")"+d.SimpellaConnections_db.get(i).ip+":"+d.SimpellaConnections_db.get(i).port+"\t"+"Packs: "+d.SimpellaConnections_db.get(i).packets_sent+":"+d.SimpellaConnections_db.get(i).packets_rxd+"\t"+"Bytes: "+d.SimpellaConnections_db.get(i).bytes_sent+":"+d.SimpellaConnections_db.get(i).bytes_rxd);
-			}
-		}	
-			}
-			else if(s.equals("d"))
-			{
-				synchronized(d.Downloads_db)
-				{
-					Downloads download;
-					Iterator i=d.Downloads_db.iterator();
-					float total_size;
-					float download_size;
-					int count=1;
-					System.out.println("DOWNLOAD STATS:\n---------------");
-					while(i.hasNext())
-					{
-						String str_total;
-						String str_download;
-						download=(Downloads) i.next();
-						total_size=download.total_size;
-						download_size=download.downloaded_size;
-						int m=1024*1024;
-						int k=1024;
-						if(total_size>m)
-						{
-							str_total=(total_size/m)+"M";
+			if(s.equals("info")){
+				if(st.hasMoreElements()){
+					s=st.nextToken();
+					if(s.equals("c")){
+						System.out.println("CONNECTION STATS:\n---------------");
+						synchronized (d.SimpellaConnections_db) {
+						for (int i=0;i<d.SimpellaConnections_db.size();i++){
+							System.out.println(i+1+")"+d.SimpellaConnections_db.get(i).ip+":"+d.SimpellaConnections_db.get(i).port+"\t"+"Packs: "+d.SimpellaConnections_db.get(i).packets_sent+":"+d.SimpellaConnections_db.get(i).packets_rxd+"\t"+"Bytes: "+d.SimpellaConnections_db.get(i).bytes_sent+":"+d.SimpellaConnections_db.get(i).bytes_rxd);
 						}
-						else if(total_size>k)
+					}	
+				}
+				else if(s.equals("d")){
+					synchronized(d.Downloads_db){
+						Downloads download;
+						Iterator i=d.Downloads_db.iterator();
+						float total_size;
+						float download_size;
+						int count=1;
+						System.out.println("DOWNLOAD STATS:\n---------------");
+						while(i.hasNext())
 						{
-							str_total=(total_size/k)+"K";
-						}
-						else
-							str_total=(total_size)+"bytes";
-						if(download_size>m)
-						{
-							str_download=(download_size/m)+"M";
-						}
-						else if(download_size>k)
-						{
-							str_download=(download_size/k)+"K";
-						}
-						else
-							str_download=(download_size)+"bytes";	
+							String str_total;
+							String str_download;
+							download=(Downloads) i.next();
+							total_size=download.total_size;
+							download_size=download.downloaded_size;
+							int m=1024*1024;
+							int k=1024;
+							if(total_size>m)
+							{
+								str_total=(total_size/m)+"M";
+							}
+							else if(total_size>k)
+							{
+								str_total=(total_size/k)+"K";
+							}
+							else
+								str_total=(total_size)+"bytes";
+							if(download_size>m)
+							{
+								str_download=(download_size/m)+"M";
+							}
+							else if(download_size>k)
+							{
+								str_download=(download_size/k)+"K";
+							}
+							else
+								str_download=(download_size)+"bytes";	
 							
-						System.out.println(count+")"+download.ip+":"+download.port+"\t"+download.downloaded_percentage+"%\t"+str_download+"/"+str_total);
-					count++;
+							System.out.println(count+")"+download.ip+":"+download.port+"\t"+download.downloaded_percentage+"%\t"+str_download+"/"+str_total);
+							count++;
+						}
 					}
 				}
-			}
 			else if(s.equals("h"))
 			{
 				long  size=Database.total_size_of_files_shared;
@@ -118,15 +110,6 @@ Database d;
 					
 				System.out.println("HOST STATS:\n---------------");
 				System.out.println("Hosts: "+d.total_no_of_hosts+"\tNum Shared: "+d.total_files_shared+"\t"+"Size Shared: "+str_size);	
-	//cool
-//			
-//				for(int i=0;i<d.HostInfo_db.size();i++)
-//				{
-//					System.out.println(d.HostInfo_db.get(i).ip);
-//					System.out.println(d.HostInfo_db.get(i).port_no);
-//				}
-				//
-			
 			}
 			else if(s.equals("n"))
 			{
@@ -174,13 +157,15 @@ Database d;
 				System.out.println("\nEnter a valid option : [cdhnqs]");
 			}
 		}
-		//autoconnect block
-		//
-		
-		
+
+
+		//auto connect block
+		//==============================================================================
 		else if(s.equals("autoconnect")){
 			IntelligentClientHandler tch=new IntelligentClientHandler(d);
 		}
+		
+		
 		//share command block
 		//=================================================================================
 		else if(s.equals("share"))
@@ -190,9 +175,6 @@ Database d;
 				s=st.nextToken();
 				if(s.endsWith("-i"))
 				{
-//					File f=new File(".");
-//				Database.file_directory=f.getCanonicalPath();
-//				System.out.println("\nsharing "+Database.file_directory);
 				if(Database.file_directory==null)
 				System.out.println("No  directory currently shared!!!");
 				else
@@ -533,10 +515,7 @@ Database d;
 	
 		}
 
-   		
-   		
-		
-		
+
 		// download command block
 		//===================================================
    		
@@ -603,18 +582,6 @@ Database d;
 									FileOutputStream fos=new FileOutputStream(f);
 									System.out.println("Download started!!!");
 									new DownloadThread(br,fos,download,d);
-//									int c1=0;
-//									int count=0;
-//									while((c1=br.read())!=-1)
-//									{
-//										
-//										fos.write(c1);
-//										count++;
-//										download.downloaded_size=count/1024;
-//										download.downloaded_percentage=(download.downloaded_size/download.total_size)*100;
-//									}
-//									fos.close();
-//									System.out.println("download done");
 								}
 								else
 									if(s.equals("503"))
@@ -625,9 +592,6 @@ Database d;
 							}
 						} else
 							throw new InvalidHttpException();
-					
-			
-				
 			}
 				
 			}
@@ -681,8 +645,6 @@ catch(Exception e)
 		
 			}
 		
-			
-	
 		}
 		
 		 catch (IOException e) {
@@ -694,12 +656,6 @@ catch(Exception e)
 			e.printStackTrace();
 		}
 			}
-
-		
-		
-			
-	}
-			
-
 	
+	}
 }
