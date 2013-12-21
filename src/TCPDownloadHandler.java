@@ -148,25 +148,17 @@ public class TCPDownloadHandler extends Thread {
 								port = Integer
 										.parseInt(str1.nextToken().trim());
 							download.port=port;
-							//debug statement
-							//System.out.println("breakpoint 6");
 							} else
 								throw new InvalidHttpException();
 						} else
 							throw new InvalidHttpException();
-						//debug statement
-						//System.out.println("breakpoint 7");
 					} 
 					if (valid){
-						//debug statement
-						//System.out.println("breakpoint 8");
 						break;
 					}
 						
 				}
 				if (!valid){
-					//debug statement
-					//System.out.println("breakpoint 9");
 					throw new InvalidHttpException();
 				}
 					
@@ -184,13 +176,9 @@ public class TCPDownloadHandler extends Thread {
 					file_size = d.SharedLibrary_db.get(i).file_size;
 					file_path = Database.file_directory;
 					file_found = true;
-					//debug statement
-					//System.out.println("breakpoint 5 file found");
 					break;
 				}
 			}
-			
-			
 			
 			if (file_found) {
 
@@ -219,19 +207,6 @@ public class TCPDownloadHandler extends Thread {
 					int i=0;
 					while((w=fis.read())!=-1)
 					{
-					/*	b[i]=(byte)w;
-						i++;
-						if(i==1024)
-						{
-							i=0;
-							d.write(b);
-						}
-						
-						download.downloaded_size=download.downloaded_size+1;
-						download.downloaded_percentage=(download.downloaded_size/download.total_size)*100;
-						
-						*/
-						
 						d.write(w);
 					}
 					if(i>0)
