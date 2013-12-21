@@ -84,12 +84,12 @@ public class Database {
 	
 	static boolean monitor=false;
 	static UUID servent_id= UUID.randomUUID();
-static InetAddress local_host;
-static int simpella_port;
-static int download_port;
+	static InetAddress local_host;
+	static int simpella_port;
+	static int download_port;
 	static int total_no_of_hosts=1;
-static 	int total_files_shared=0;
-static long total_size_of_files_shared=0;
+	static 	int total_files_shared=0;
+	static long total_size_of_files_shared=0;
 	static long local_size_of_files_shared=0;
 	static int local_files_shared=0;
 	static int no_incoming=0 ;
